@@ -12,3 +12,7 @@
 ## knowledge-graph
 
 记录常用的思维逻辑图和脑图。
+
+## leetcode
+
+leetcode解题记录。
