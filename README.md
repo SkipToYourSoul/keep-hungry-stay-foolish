@@ -1,6 +1,4 @@
 # keep-hungry-stay-foolish
-Rome was not built in a day.
-
 收集和记录在日常工作开发中遇到的知识点和踩坑点，作备忘用。
 
 ## daily-bugs
