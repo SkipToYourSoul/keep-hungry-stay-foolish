@@ -1,5 +1,3 @@
-#### [特定深度节点链表](https://leetcode-cn.com/problems/list-of-depth-lcci/)
-
 ```python
 # Definition for a binary tree node.
 # class TreeNode:
@@ -13,7 +11,11 @@
 #     def __init__(self, x):
 #         self.val = x
 #         self.next = None
+```
 
+#### [特定深度节点链表](https://leetcode-cn.com/problems/list-of-depth-lcci/)
+
+```python
 class Solution:
     def listOfDepth(self, tree: TreeNode) -> List[ListNode]:
         result = []
@@ -70,3 +72,40 @@ class Solution:
                 val = val + root.right.right.val
         return val
 ```
+
+文献：
+
+二叉树遍历：https://blog.csdn.net/lixinyu306/article/details/83931171
+
+#### [面试题27. 二叉树的镜像](https://leetcode-cn.com/problems/er-cha-shu-de-jing-xiang-lcof/)
+
+```python
+class Solution:
+    def mirrorTree(self, root: TreeNode) -> TreeNode:
+        if root is None:
+            return None
+        # layer scan
+        queue = []
+        queue.append(root)
+        while len(queue) > 0:
+            node = queue.pop(0)
+            tmp = node.left
+            node.left = node.right
+            node.right = tmp
+            if node.left is not None:
+                queue.append(node.left)
+            if node.right is not None:
+                queue.append(node.right)
+        return root
+    # 递归
+    def mirrorTree(self, root: TreeNode) -> TreeNode:
+        if root is None:
+            return None
+        tmp = root.left
+        root.left = root.right
+        root.right = tmp
+        self.mirrorTree(root.left)
+        self.mirrorTree(root.right)
+        return root
+```
+
