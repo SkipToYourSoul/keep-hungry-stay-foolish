@@ -1,12 +1,14 @@
-#### [二进制链表转整数](https://leetcode-cn.com/problems/convert-binary-number-in-a-linked-list-to-integer/)
-
 ```python
 # Definition for singly-linked list.
 # class ListNode:
 #     def __init__(self, x):
 #         self.val = x
 #         self.next = None
+```
 
+#### [二进制链表转整数](https://leetcode-cn.com/problems/convert-binary-number-in-a-linked-list-to-integer/)
+
+```python
 # 普通解法
 import math
 class Solution:
@@ -32,5 +34,22 @@ class Solution:
             result = result | head.val
             head = head.next
         return result
+```
+
+#### [返回倒数第 k 个节点](https://leetcode-cn.com/problems/kth-node-from-end-of-list-lcci/)
+
+```python
+# 双指针
+class Solution:
+    def kthToLast(self, head: ListNode, k: int) -> int:
+        slow = fast = head
+        i = 0
+        while i < k:
+            fast = fast.next
+            i += 1
+        while fast:
+            fast = fast.next
+            slow = slow.next
+        return slow.val
 ```
 
