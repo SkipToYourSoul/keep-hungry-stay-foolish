@@ -36,7 +36,7 @@ Redis是一个速度非常快的非关系数据库（non-relational database）�
 
 Couchbase是由CouchOne(创办人包括CouchDB的设计者)和Membase(由memcached的主要开发人员建立)两家公司在2011年初合并而来。Membase公司有一个名为Membase的产品，它是个键/值、持久化、可伸缩的解决方案，使用了memcached wire协议和SqlLite嵌入式存储引擎。CouchOne支持的CouchDB是个文档数据库，提供了端到端的复制方法，这对于移动与分布在不同位置的数据中心来说是很有用的。Couchbase是基于Membase与CouchDB开发的一款新产品，综合了两者的优点。
 
-### 中间件
+## 中间件
 
 #### Kafka
 
@@ -51,3 +51,10 @@ RocketMQ 是阿里巴巴开源的一款分布式消息中间件。具有高性�
 #### [Dubbo](http://dubbo.apache.org/zh-cn/index.html)
 
 Apache Dubbo是一款高性能Java RPC框架。它提供了三大核心能力：面向接口的远程方法调用，智能容错和负载均衡，以及服务自动注册和发现。
+
+## 应用框架
+
+### [Spring Boot](https://spring.io/projects/spring-boot/)
+
+Spring Boot是由Pivotal团队提供的全新框架，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。
+
