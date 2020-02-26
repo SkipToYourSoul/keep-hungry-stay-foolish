@@ -1,0 +1,7 @@
+{
+    "plugins": [
+        "theme-comscore",
+	"anchor-navigation-ex",
+	"expandable-chapters"
+    ]
+}
