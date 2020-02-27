@@ -4,6 +4,8 @@
 * [programming-artical](doc/programming-artical/intro.md)
     * [HashMap](doc/programming-artical/HashMap.md)
     * [ConcurrentHashMap](doc/programming-artical/ConcurrentHashMap&HashTable.md)
+    * [ArrayList](doc/programming-artical/ArrayList.md)
+    * [Java-Basic](doc/programming-artical/Java-Related.md)
 * [knowledge-graph](doc/knowledge-graph/intro.md)
     * [Git](doc/knowledge-graph/git.md)
 * [daily-bugs](doc/daily-bugs/intro.md)
