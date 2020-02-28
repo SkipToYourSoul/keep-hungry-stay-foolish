@@ -14,7 +14,82 @@ https://www.jianshu.com/p/94dbef2de298
 
 # 反射
 
-反射
+> 能够分析类能力的程序被称为反射（reflective），通过反射可以在运行时（而不是在编译时）动态地分析软件组件并描述组件的功能。
+
+通过反射，我们可以
+
+- 分析类的能力
+- 获得类的对象，即使你不知道这个类到底是个啥玩意儿
+
+用一个例子说明。
+
+```java
+public class ReflectTest {
+    public static <T> T create(Class clazz) {
+        // 通过反射获得一个类的对象
+        Object object = null;
+        try {
+            object = Class.forName(clazz.getName()).newInstance();
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // 通过反射进行类分析
+        System.out.println("====Construct====");
+        for (Constructor constructor : clazz.getConstructors()) {
+            System.out.println(constructor);
+        }
+        System.out.println("====Fields====");
+        for (Field field : clazz.getFields()) {
+            System.out.println(field);
+        }
+        System.out.println("====DeclaredFields====");
+        for (Field field : clazz.getDeclaredFields()) {
+            System.out.println(field);
+        }
+        System.out.println("====Methods====");
+        for (Method method : clazz.getMethods()) {
+            System.out.println(method);
+        }
+        System.out.println("====DeclaredMethods====");
+        for (Method method : clazz.getDeclaredMethods()) {
+            System.out.println(method);
+        }
+
+        return (T) object;
+    }
+
+    public static void main(String[] args) {
+        Cat cat = ReflectTest.create(Cat.class);
+        System.out.println(cat.tail);
+        System.out.println(cat.getVoice());
+    }
+}
+
+class Cat {
+    private String voice;
+    public String tail = "tail";
+
+    public Cat() {
+    }
+
+    public Cat(String voice) {
+        this.voice = voice;
+    }
+
+    private void printVoice() {
+        System.out.println(this.voice + this.tail);
+    }
+
+    public String getVoice() {
+        return voice;
+    }
+}
+```
+
+
+
+参考文献：https://juejin.im/post/5e578437518825493775fbdb?utm_source=gold_browser_extension
 
 # 设计模式
 
