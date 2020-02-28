@@ -1,4 +1,4 @@
-# 并发容器：基础知识点
+# 基础知识点
 
 ## 线程安全的实现方式
 
@@ -96,6 +96,34 @@ get操作无需加锁。
 >
 > java.util.concurrent包下的容器都是fail-safe的，可以在多线程下并发使用，并发修改。同时也可以在foreach中进行add/remove 。
 
+# 知识延伸：同步容器和并发容器
+
+在Java中，同步容器主要包括2类：
+
+- 1、Vector、Stack、HashTable
+- 2、Collections类中提供的静态工厂方法创建的类
+
+Vector这样的同步容器的所有公有方法全都是synchronized的，也就是说，我们可以在多线程场景中放心的使用单独这些方法，因为这些方法本身的确是线程安全的。
+
+但是，请注意上面这句话中，有一个比较关键的词：单独。因为，虽然同步容器的所有方法都加了锁，但是对这些容器的复合操作无法保证其线程安全性。需要客户端通过主动加锁来保证。
+
+```java
+// 方法中包含复合操作，这样在多线程的环境下，同样是线程不安全的
+public Object deleteLast(Vector v){
+    int lastIndex  = v.size()-1;
+    v.remove(lastIndex);
+}
+// 这时候需要手动的为该方法加锁，并发度低
+public Object deleteLast(Vector v){
+  synchronized(v) {
+    int lastIndex  = v.size()-1;
+    v.remove(lastIndex);
+  } 
+}
+```
+
+这也是为什么在实际开发中，我们选用java.util.concurent包下的并发容器类。并发容器有更好的并发能力。而且其中的ConcurrentHashMap定义了线程安全的复合操作。比如putIfAbsent()、replace()，这2个操作都是原子操作，可以保证线程安全。
+
 # 常见问题
 
 - 谈谈你理解的 Hashtable，讲讲其中的 get put 过程。ConcurrentHashMap同问。
@@ -115,3 +143,5 @@ get操作无需加锁。
 # 参考文档
 
 https://mp.weixin.qq.com/s/AixdbEiXf3KfE724kg2YIw
+
+https://mp.weixin.qq.com/s/0cMrE87iUxLBw_qTBMYMgA
