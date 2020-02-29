@@ -109,3 +109,85 @@ class Solution:
         return root
 ```
 
+#### [最小高度树](https://leetcode-cn.com/problems/minimum-height-tree-lcci/)
+
+```python
+# 参考二分查找的思想
+class Solution:
+    def sortedArrayToBST(self, nums: List[int]) -> TreeNode:
+        tree = self.create(0, len(nums) - 1, nums)
+        return tree
+
+    def create(self, left, right, nums):
+        if left <= right:
+            mid = (right + left) // 2
+            print("left={}, right={}, mid={}".format(left, right, mid))
+            tree_node = TreeNode(nums[mid])
+            tree_node.left = self.create(left, mid-1, nums)
+            tree_node.right = self.create(mid+1, right, nums) 
+            return tree_node
+        else:
+            return None
+```
+
+#### [二叉树的深度](https://leetcode-cn.com/problems/er-cha-shu-de-shen-du-lcof/)
+
+```python
+class Solution:
+    def maxDepth(self, root: TreeNode) -> int:
+        if root is None:
+            return 0
+        return max(self.maxDepth(root.left), self.maxDepth(root.right)) + 1
+```
+
+#### [层数最深叶子节点的和](https://leetcode-cn.com/problems/deepest-leaves-sum/)
+
+```python
+class Solution:
+    result = 0
+    max_depth = -1
+    
+    def deepestLeavesSum(self, root: TreeNode) -> int:
+        self.dfs(root, 1)
+        return self.result
+    
+    def dfs(self, root, depth):
+        if root is None:
+            return
+        if depth > self.max_depth:
+            self.max_depth = depth
+            self.result = root.val
+        elif depth == self.max_depth:
+            self.result = self.result + root.val
+        self.dfs(root.left, depth + 1)
+        self.dfs(root.right, depth + 1)
+```
+
+#### [最大二叉树](https://leetcode-cn.com/problems/maximum-binary-tree/)
+
+```python
+class Solution:
+    def constructMaximumBinaryTree(self, nums: List[int]) -> TreeNode:
+        return self.create(0, len(nums) - 1, nums)
+
+    def create(self, left, right, nums):
+        if left <= right:
+            mid = self.getMidIndex(left, right, nums)
+            # build tree
+            root = TreeNode(nums[mid])
+            root.left = self.create(left, mid - 1, nums)
+            root.right = self.create(mid + 1, right, nums)
+            return root
+        else:
+            return None
+    
+    def getMidIndex(self, left, right, nums):
+        max_num = nums[left]
+        mid = left
+        for i in range(left, right + 1):
+            if nums[i] > max_num:
+                max_num = nums[i]
+                mid = i
+        return mid
+```
+

@@ -53,3 +53,30 @@ class Solution:
         return slow.val
 ```
 
+#### [删除链表中的节点](https://leetcode-cn.com/problems/delete-node-in-a-linked-list/)
+
+```python
+# 把当前节点变成下一个节点
+class Solution:
+    def deleteNode(self, node):
+        """
+        :type node: ListNode
+        :rtype: void Do not return anything, modify node in-place instead.
+        """
+        node.val = node.next.val
+        node.next = node.next.next
+```
+
+#### [从尾到头打印链表](https://leetcode-cn.com/problems/cong-wei-dao-tou-da-yin-lian-biao-lcof/)
+
+```python
+class Solution:
+    def reversePrint(self, head: ListNode) -> List[int]:
+        result = []
+        while head:
+            result.append(head.val)
+            head = head.next
+        result.reverse()
+        return result
+```
+
