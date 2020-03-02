@@ -59,7 +59,7 @@ b = null;
 
 现代虚拟机基本都是采用这种算法来判断对象是否存活，可达性算法的原理是以一系列叫做  **GC Root** 的对象为起点出发，引出它们指向的下一个节点，再以下个节点为起点，引出此节点指向的下一个结点。这样通过 GC Root 串成的一条线就叫引用链。直到引用链遍历完毕,如果相关对象不在任意一个以 **GC Root** 为起点的引用链中，则这些对象会被判断为「垃圾」,会被 GC 回收。
 
-![gc-roots](/img/jvm-gcroots.png)
+![gc-roots](/img/jvm-gcroots.jpg)
 
 如图示，如果用可达性算法即可解决上述循环引用的问题，因为从**GC Root** 出发没有到达 a,b,所以 a，b 可回收。
 
@@ -76,21 +76,20 @@ b = null;
 
 ```java
 public class Test {
-    public static Test s;
-  	// 方法区中常量引用的对象 s2 指向的对象并不会因为 a 指向的对象被回收而回收
-  	public static final Test s2 = new Test();
-    public static  void main(String[] args) {
-			// 虚拟机栈中的引用对象
-      Test a = new Test();
-      // // a 是栈帧中的本地变量，当 a = null 时，由于此时 a 充当了 GC Root 的作用，a 与原来指向的实例 new Test() 断开了连接，所以对象会被回收
-			a = null;
-      
-      // 方法区中类静态属性引用的对象
-      Test b = new Test();
-      b.s = new Test();
-      // b = null 时，由于 a 原来指向的对象与GC Root(变量b) 断开了连接，所以b原来指向的对象会被回收，而由于我们给 s 赋值了变量的引用，s在此时是类静态属性引用，充当了GC Root的作用，它指向的对象依然存活
-      b = null;
-    }
+  public static Test s;
+  //方法区中常量引用的对象 s2 指向的对象并不会因为 a 指向的对象被回收而回收
+  public static final Test s2 = new Test();
+  public static  void main(String[] args) {
+    // 虚拟机栈中的引用对象
+    Test a = new Test();
+    // a 是栈帧中的本地变量，当 a = null 时，由于此时 a 充当了 GC Root 的作用，a 与原来指向的实例 new Test() 断开了连接，所以对象会被回收
+    a = null;
+    // 方法区中类静态属性引用的对象
+    Test b = new Test();
+    b.s = new Test();
+    // b = null 时，由于 a 原来指向的对象与GC Root(变量b) 断开了连接，所以b原来指向的对象会被回收，而由于我们给 s 赋值了变量的引用，s在此时是类静态属性引用，充当了GC Root的作用，它指向的对象依然存活
+    b = null;
+  }
 }
 ```
 
