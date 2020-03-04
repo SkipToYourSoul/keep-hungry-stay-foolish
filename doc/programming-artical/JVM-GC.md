@@ -215,6 +215,10 @@ Parallel Scavenge 收集器也是一个使用**复制算法**，**多线程**，
 
 CMS 等垃圾收集器关注的是尽可能缩短垃圾收集时用户线程的停顿时间，而 Parallel Scavenge 目标是达到一个可控制的吞吐量（吞吐量 = 运行用户代码时间 / （运行用户代码时间+垃圾收集时间）），也就是说 CMS 等垃圾收集器更适合用到与用户交互的程序，因为停顿时间越短，用户体验越好，而 Parallel Scavenge 收集器关注的是吞吐量，所以更适合做后台运算等不需要太多用户交互的任务。
 
+Parallel Scavenge 收集器提供了两个参数来精确控制吞吐量，分别是控制最大垃圾收集时间的 -XX:MaxGCPauseMillis 参数及直接设置吞吐量大小的 -XX:GCTimeRatio（默认99%）
+
+除了以上两个参数，还可以用 Parallel Scavenge 收集器提供的第三个参数 -XX:UseAdaptiveSizePolicy，开启这个参数后，就不需要手工指定新生代大小,Eden 与 Survivor 比例（SurvivorRatio）等细节，只需要设置好基本的堆大小（-Xmx 设置最大堆）,以及最大垃圾收集时间与吞吐量大小，虚拟机就会根据当前系统运行情况收集监控信息，动态调整这些参数以尽可能地达到我们设定的最大垃圾收集时间或吞吐量大小这两个指标。自适应策略也是 Parallel Scavenge  与 ParNew 的重要区别！
+
 ### 老年代回收器
 
 #### Serial Old
@@ -284,20 +288,56 @@ G1 收集器的工作步骤如下
 
 > 历代JVM默认垃圾回收器
 >
-> 1. jdk1.7 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）
+> - jdk1.7 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）
 >
->
-> 2. jdk1.8 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）
->
-> 3. jdk1.9 默认垃圾收集器G1
->
-> 4. jdk10 默认垃圾收集器G1
->
-> 5. jdk11 默认垃圾收集器G1
+> - jdk1.8 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）
+> - jdk1.9 默认垃圾收集器G1
+> - jdk10 默认垃圾收集器G1
+> - jdk11 默认垃圾收集器G1
 
 # GC实践
 
-GC日志、OOM场景排查、内存调试工具。
+GC日志、OOM场景排查和解决方案、内存调试工具。
+
+## JVM参数简介
+
+Java程序启动时可以设置相应的JVM参数。
+
+```java
+// 脸谱线上服务启动参数设置样例, 线上服务单容器配置为4core 8g
+// 设置初始堆和最大堆大小为6g，新生代老年代比例为1:2，使用并发GC并且并发线程数为4
+// 将4分之3的内存分配给堆，其余为堆外内存，实测中内存使用在45 - 70间波动
+// 加大老年代空间占比，尽量降低full gc的频率，一般来说，新生代占比不宜过大，复制算法的消耗是很大的
+// 并发线程数 = core，充分利用cpu资源，回收时不需要让线程切换cpu时间导致浪费
+-Xms6g -Xmx6g -XX:NewRatio=2 -XX:+UseParallelGC -XX:ParallelGCThreads=4 
+// 当JVM发生OOM时，自动生成DUMP文件，方便排查内存泄露等问题
+-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${MARATHON_INJECT_VOLUME_LOG} 
+// GC日志相关设置
+-XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:GCLogFileSize=50M -XX:NumberOfGCLogFiles=10 -XX:+UseGCLogFileRotation -Xloggc:${MARATHON_INJECT_VOLUME_LOG}/gc.log
+
+// jvm启动时gc日志如下
+CommandLine flags: -XX:CICompilerCount=15 -XX:GCLogFileSize=52428800 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/data/lianpu/online-server/logs -XX:InitialHeapSize=6442450944 -XX:MaxHeapSize=6442450944 -XX:MaxNewSize=2147483648 -XX:MinHeapDeltaBytes=524288 -XX:NewRatio=2 -XX:NewSize=2147483648 -XX:NumberOfGCLogFiles=10 -XX:OldSize=4294967296 -XX:ParallelGCThreads=4 -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseGCLogFileRotation -XX:+UseParallelGC 
+  
+// YoungGc
+2020-02-11T15:39:55.243+0800: 2179926.813: [GC (Allocation Failure) [PSYoungGen: 2087840K->4704K(2089984K)] 2919176K->838184K(6284288K), 0.0102432 secs] [Times: user=0.04 sys=0.00, real=0.01 secs] 
+// FullGc
+2020-03-03T06:44:24.388+0800: 3962195.958: [Full GC (Ergonomics) [PSYoungGen: 5248K->0K(2089472K)] [ParOldGen: 4190173K->51670K(4194304K)] 4195421K->51670K(6283776K), [Metaspace: 52366K->52366K(1099776K)], 0.1783458 secs] [Times: user=0.15 sys=0.14, real=0.18 secs]
+```
+
+JVM 参数主要分以下三类
+
+1、 标准参数（-），所有的 JVM 实现都必须实现这些参数的功能，而且向后兼容；例如 **-verbose:gc**（输出每次GC的相关情况)
+
+2、 非标准参数（-X），默认 JVM 实现这些参数的功能，但是并不保证所有 JVM 实现都满足，且不保证向后兼容，栈，堆大小的设置都是通过这个参数来配置的。例如
+
+| 参数示例 | 参数含义                        |
+| -------- | ------------------------------- |
+| -Xms512m | JVM启动时设置的初始堆大小为512M |
+| -Xms512m | 可分配的最大堆大小为512M        |
+| -Xmn200m | 年轻代大小为200M                |
+| -Xss128k | 设置每个线程的栈大小为128K      |
+
+
 
 # 参考文献
 
