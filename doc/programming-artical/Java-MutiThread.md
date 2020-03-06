@@ -57,7 +57,17 @@ final String cat = "miao";
 
 乐观锁持乐观态度，就是假设我的数据不会被意外修改，如果修改了，就放弃，从头再来。悲观锁持悲观态度，就是假设我的数据一定会被意外修改，那干脆直接加锁得了。
 
-CAS 是乐观锁的一种实现方式，是一种轻量级锁，CAS 操作的流程如下，线程在读取数据时不进行加锁，在准备写回数据时，比较原值是否修改，若未被其他线程修改则写回，若已被修改，则重新执行读取流程。
+CAS （Compare and Swap）是乐观锁的一种实现方式，是一种轻量级锁，CAS 操作的流程如下，线程在读取数据时不进行加锁，在准备写回数据时，比较原值是否修改，若未被其他线程修改则写回，若已被修改，则重新执行读取流程。
+
+```java
+// 这里内部使用CAS实现
+AtomicBoolean flag = new AtomicBoolean(true);
+flag.comnpreAndSet(true, false);
+```
+
+
+
+> 更多锁相关的介绍可参考：https://mp.weixin.qq.com/s/hX3RJhJxyy7w0ADMcLlWYg
 
 ## 生产者消费者问题
 
