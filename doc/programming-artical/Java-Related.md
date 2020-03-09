@@ -94,3 +94,9 @@ class Cat {
 # 设计模式
 
 单例、Builder
+
+# 类加载
+
+https://mp.weixin.qq.com/s/eHqFONXXNc-LD4ugaKM6UA
+
+类加载器、双亲委派模型也是非常重要的知识点。
