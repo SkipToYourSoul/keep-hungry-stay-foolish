@@ -37,3 +37,9 @@ public interface OnlineService {
 ### 技术选型
 
 db的选择
+
+## 问题反思
+
+### Q：缓存问题上为啥不用布隆过滤器？
+
+布隆过滤器解析：[跳转](https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485878&idx=2&sn=631a246d525f963459ff9262e11a0dd2)
