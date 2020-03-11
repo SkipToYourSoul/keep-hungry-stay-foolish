@@ -9,6 +9,10 @@
 
 总结记录日常开发中的知识点。
 
+[高并发低延时的在线服务设计和实现](/doc/programming-artical/OnlineServiceDesignAndOptimize)
+
+[快速查询服务设计和实现](/doc/programming-artical/QueryServiceDesignAndOptimize)
+
 ## knowledge-graph
 
 记录常用的思维逻辑图和脑图。
