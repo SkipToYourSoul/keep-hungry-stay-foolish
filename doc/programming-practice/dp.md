@@ -17,3 +17,21 @@ class Solution:
         return result[amount] if result[amount] != float("inf") else -1
 ```
 
+#### [300. 最长上升子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+
+```python
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        # dp[i] = max(dp[j]) + 1, 0<=j<i, nums[i] > nums[j]
+        if len(nums) == 0:
+            return 0
+        dp = []
+        for i in range(len(nums)):
+            dp.append(1)
+            for j in range(i):
+                if nums[i] > nums[j]:
+                    dp[i] = max(dp[i], dp[j] + 1)
+
+        return max(dp)
+```
+
