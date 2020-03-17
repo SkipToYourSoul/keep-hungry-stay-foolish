@@ -18,7 +18,7 @@
 常用技术点的最佳实践，概括了以下技术的适用场景和在使用过程中遇到的问题。包括：
 
 - [HBase](doc/best-practice/HBase.md)
-- Hive
+- [Hive](doc/best-practice/Hive.md)
 - Redis
 - Dubbo
 - Couchbase
