@@ -80,3 +80,72 @@ class Solution:
         return result
 ```
 
+#### [206. 反转链表](https://leetcode-cn.com/problems/reverse-linked-list/)
+
+```python
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        pre, cur, nxt = None, head, head
+        while cur is not None:
+            nxt = cur.next
+            cur.next = pre
+            pre = cur
+            cur = nxt
+        return pre
+```
+
+#### [92. 反转链表 II](https://leetcode-cn.com/problems/reverse-linked-list-ii/)
+
+```python
+class Solution:
+    def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
+        if not head:
+            return None
+        cur, prev = head, None
+        while m > 1:
+            prev = cur
+            cur = cur.next
+            m, n = m - 1, n - 1
+        
+        tail, con = cur, prev
+        while n:
+            third = cur.next
+            cur.next = prev
+            prev = cur
+            cur = third
+            n -= 1
+        if con:
+            con.next = prev
+        else:
+            head = prev
+        tail.next = cur
+        return head
+```
+
+#### [25. K 个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
+
+```python
+class Solution:
+    def reverseKGroup(self, head: ListNode, k: int) -> ListNode:
+        if head is None:
+            return None
+        a, b = head, head
+        for i in range(k):
+            if b is None:
+                return head
+            b = b.next
+        newHead = self.reverse(a, b)
+        a.next = self.reverseKGroup(b, k)
+        
+        return newHead
+    
+    def reverse(self, head, tail):
+        pre, cur, nxt = None, head, head
+        while cur != tail:
+            nxt = cur.next
+            cur.next = pre
+            pre = cur
+            cur = nxt
+        return pre
+```
+
