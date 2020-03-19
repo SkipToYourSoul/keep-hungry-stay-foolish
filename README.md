@@ -10,6 +10,7 @@
 1. [浅谈如何从零开始搭建一个用户数据平台](/doc/programming-artical/FaceDesign.md)
 2. [高并发低延时的在线服务设计和实现](/doc/programming-artical/OnlineServiceDesignAndOptimize.md)
 3. [快速查询服务设计和实现](/doc/programming-artical/QueryServiceDesignAndOptimize.md)
+4. [Link：深入理解大数据Lamda架构](https://jiang-hao.com/articles/2019/big-data-lambda-architecture.html)
 
 以及一些基础的编程知识点汇总。
 
