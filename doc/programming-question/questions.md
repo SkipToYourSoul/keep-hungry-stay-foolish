@@ -1,17 +1,10 @@
-### 缓存击穿、缓存穿透、缓存雪崩
-https://blog.csdn.net/kongtiao5/article/details/82771694
+# Questions
 
+#### 谈谈对SOA和微服务的理解，以及分布式架构从应用层面涉及到的调整和挑战。
 
+#### 关系型数据库和NoSql各自的优劣点，如何技术选型
 
-# 前端实习生面试
-
-vue+数据库+springboot+后端语言
-
-简单的自我介绍。
-
-项目相关问题：vue相比angularJS，更好用的地方；是否使用过java、python等其他面向对象的编程语言；是否遇到过内存泄露的情况以及如何避免和解决。项目中的一个难点以及解决过程。未来的技术发展方向。
-
-技术相关问题。
+https://www.cnblogs.com/shqnl/p/11479159.html
 
 ## Vue
 
