@@ -18,26 +18,13 @@
 
 常用技术点的最佳实践，概括了以下技术的适用场景和在使用过程中遇到的问题。包括：
 
-大数据相关：
+大数据相关：[HBase](doc/best-practice/HBase.md)、[Hive](doc/best-practice/Hive.md)、[Impala](doc/best-practice/Impala.md)
 
-- [HBase](doc/best-practice/HBase.md)
-- [Hive](doc/best-practice/Hive.md)
-- [Impala](doc/best-practice/Impala.md)
+数据库相关：[Redis](doc/best-practice/Redis.md)、[Couchbase](doc/best-practice/Couchbase.md)
 
-数据库相关
+消息中间件：[Kafka](doc/best-practice/Kafka.md)、[RocketMQ]((doc/best-practice/RocketMQ.md))
 
-- Redis
-- Couchbase
-
-消息中间件
-
-- [Kafka](doc/best-practice/Kafka.md)
-- [RocketMQ]((doc/best-practice/RocketMQ.md))
-
-应用服务相关
-
-- Dubbo
-- SpringBoot
+应用服务相关：[Dubbo](doc/best-practice/Dubbo.md)、[Spring&SpringBoot](doc/best-practice/Spring&SpringBoot.md)
 
 ## daily-bugs
 
