@@ -15,3 +15,12 @@ synchronized可重入，因为加锁和解锁自动进行，不必担心最后�
 synchronized不可响应中断，一个线程获取不到锁就一直等着；ReentrantLock可以相应中断。
 
 ReentrantLock能实现公平锁，可使用tryLock实现限时等待。
+
+### Q：锁升级过程
+
+偏向锁：无竞争条件下，线程将自己的指针更新到markword（Object对象前4个字节）中。偏向锁不一定能提高效率，在明确知道多个线程强烈竞争的时候，系统会把资源大量消耗在撤销上。
+
+自旋锁：轻量级锁，每个线程在线程栈中生成LockRecord，用CAS方式尝试把自己的指针更新到mardword。每一次锁重入，都会有一个LockRecord。自旋锁占用CPU。
+
+重量级锁：操作系统内核加锁。自旋超过10次或者线程数大于CPU核数/2，升级为重量级锁（JVM 的Adaptive CAS会自适应调整）。
+
