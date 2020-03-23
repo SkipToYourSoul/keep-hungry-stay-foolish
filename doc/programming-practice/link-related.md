@@ -149,3 +149,40 @@ class Solution:
         return pre
 ```
 
+#### [876. 链表的中间结点](https://leetcode-cn.com/problems/middle-of-the-linked-list/)
+
+```python
+class Solution:
+    def middleNode(self, head: ListNode) -> ListNode:
+        if head is None:
+            return None
+        
+        slow, fast = head, head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow
+```
+
+#### [面试题 02.06. 回文链表](https://leetcode-cn.com/problems/palindrome-linked-list-lcci/)
+
+```python
+class Solution:
+    def isPalindrome(self, head: ListNode) -> bool:# find center
+        slow, fast = head, head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        if fast:
+            slow = slow.next
+        # compare
+        left = head
+        right = reverse(slow)
+        while left and right:
+            if left.val != right.val:
+                return False
+            left = left.next
+            right = right.next
+        return True
+```
+
