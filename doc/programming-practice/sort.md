@@ -30,3 +30,10 @@ if __name__ == "__main__":
     print("result, arr={0}".format(arr))
 ```
 
+#### 堆排序
+
+https://www.cnblogs.com/chengxiao/p/6129630.html
+
+#### 归并排序
+
+https://www.cnblogs.com/chengxiao/p/6194356.html
