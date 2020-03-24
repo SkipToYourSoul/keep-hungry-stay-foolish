@@ -87,13 +87,7 @@ class Cat {
 }
 ```
 
-
-
 参考文献：https://juejin.im/post/5e578437518825493775fbdb?utm_source=gold_browser_extension
-
-# 设计模式
-
-单例、Builder
 
 # 类加载
 

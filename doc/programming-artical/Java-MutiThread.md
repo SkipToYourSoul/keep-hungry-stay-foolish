@@ -65,8 +65,6 @@ AtomicBoolean flag = new AtomicBoolean(true);
 flag.comnpreAndSet(true, false);
 ```
 
-
-
 > 更多锁相关的介绍可参考：https://mp.weixin.qq.com/s/hX3RJhJxyy7w0ADMcLlWYg
 
 ## 生产者消费者问题
@@ -174,6 +172,55 @@ public class ProducerAndConsumer {
 
 ```java
 // 死锁case
+public class DeadLock {
+    public static String o1 = "o1";
+    public static String o2 = "o2";
+
+    public static void main(String[] args) {
+        new Thread(new LockA()).start();
+        new Thread(new LockB()).start();
+    }
+}
+
+class LockA implements Runnable {
+    @Override
+    public void run() {
+        while (true) {
+            synchronized (DeadLock.o1) {
+                try {
+                    System.out.println("LockA lock o1");
+                    Thread.sleep(1000L);
+                    synchronized (DeadLock.o2) {
+                        System.out.println("LockA lock o2");
+                        Thread.sleep(60 * 1000);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+
+class LockB implements Runnable {
+    @Override
+    public void run() {
+        while (true) {
+            synchronized (DeadLock.o2) {
+                try {
+                    System.out.println("LockB lock o2");
+                    Thread.sleep(1000L);
+                    synchronized (DeadLock.o1) {
+                        System.out.println("LockA lock o1");
+                        Thread.sleep(60 * 1000);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
 ```
 
 # 参考文献

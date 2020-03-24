@@ -203,6 +203,8 @@ Java 虚拟机规范并没有规定垃圾收集器应该如何实现，因此一
 
 #### ParNew
 
+> It differs from 'Parallel Scavenge' in that it has enhancements that make it usable with CMS
+
 ParNew 收集器是 Serial 收集器的多线程版本，除了使用多线程，其他像收集算法,STW,对象分配规则，回收策略与 Serial 收集器完成一样。
 
 ParNew 主要工作在 Server 模式，我们知道服务端如果接收的请求多了，响应时间就很重要了，多线程可以让垃圾回收得更快，也就是减少了 STW 时间，能提升响应时间。另一个与性能无关的原因是因为除了 Serial  收集器，**只有它能与 CMS 收集器配合工作**。
