@@ -223,6 +223,28 @@ class LockB implements Runnable {
 }
 ```
 
+## 线程池创建参考
+
+```java
+// Guava ThreadFactoryBuilder
+ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+	.setNameFormat("demo-pool-%d").build();
+
+//Common Thread Pool
+/* corePoolSize: 线程池的基本大小, 当提交一个任务到线程池的时候，线程池会创建一个线程来执行任务，即使当前线程池已经存在空闲线程，仍然会创建一个线程，等到需要执行的任务数大于线程池基本大小时就不再创建。
+	* maximumPoolSizeSize: 线程池最大数量，线程池允许创建的最大线程数，如果队列满了，并且已创建的线程数小于最大线程数，则线程池会再创建新的线程执行任务。
+	* keepAliveTime: 线程活动保持时间，线程池的工作线程空闲后，保持存活的时间
+	* Handler: 拒绝策略，如果线程池满了，而且有界队列也满了，对新添加进来的任务的处理方式
+*/
+ExecutorService pool = new ThreadPoolExecutor(5, 200,
+	0L, TimeUnit.MILLISECONDS,
+  new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new 
+  ThreadPoolExecutor.AbortPolicy());
+
+pool.execute(()-> System.out.println(Thread.currentThread().getName()));
+pool.shutdown();//gracefully shutdown
+```
+
 # 参考文献
 
 https://mp.weixin.qq.com/s/WDeewsvWUEBIuabvVVhweA

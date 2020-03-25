@@ -496,6 +496,56 @@ jstat -gc 2764 250 22
 
 要设置好各种 JVM 参数，还可以对 server 进行压测， 预估自己的业务量，设定好一些 JVM 参数进行压测看下这些设置好的 JVM 参数是否能满足要求
 
+## JVM调优实践
+
+吞吐量：用户代码时间/(用户代码执行时间+垃圾回收时间)
+
+响应时间：STW时间越短，响应时间越好
+
+什么是调优？调优的目标无非是吞吐量和响应时间，以及解决服务在运行过程中有可能出现的CPU和内存异常问题。
+
+1. 根据需求进行JVM规划和预调优
+2. 优化运行JVM运行环境（慢，卡顿）
+3. 解决JVM运行过程中出现的各种问题(OOM)
+
+### 实践过程
+
+Step1：假设收到了线上服务的报警信息（CPU Memory）
+
+Step2：使用TOP命令观察问题（在容器环境下，每个容器的CPU和MEM都是可被监控的）
+
+```javascript
+top - 12:49:37 up 321 days, 19:14,  0 users,  load average: 4.49, 5.28, 5.48
+Tasks:   4 total,   1 running,   3 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  6.6 us,  2.8 sy,  0.0 ni, 90.1 id,  0.0 wa,  0.0 hi,  0.5 si,  0.0 st
+KiB Mem : 19648331+total, 11333158+free, 69059992 used, 14091736 buff/cache
+KiB Swap:  4194300 total,  3136368 free,  1057932 used. 11738668+avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                                                             
+    16 root      20   0 37.258g 3.252g  16380 S  41.9  1.7  23249:52 java                                                                                
+ 61357 root      20   0   63036   2008   1472 R   0.3  0.0   0:00.02 top                                                                                 
+     1 root      20   0   22828   1580   1312 S   0.0  0.0   0:00.06 sh                                                                                  
+ 61343 root      20   0   22964   1996   1596 S   0.0  0.0   0:00.04 bash
+```
+
+Step3：top -Hp 观察进程中的线程，哪个线程CPU和内存占比高（实际线上服务线程消耗很均匀的）
+
+```javascript
+PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                                                                              
+    61 root      20   0 37.258g 3.252g  16380 S  1.7  1.7 999:35.05 java                                                              
+    70 root      20   0 37.258g 3.252g  16380 S  1.7  1.7 890:03.21 java                                                               
+    71 root      20   0 37.258g 3.252g  16380 S  1.7  1.7 901:57.00 java                                                             
+    81 root      20   0 37.258g 3.252g  16380 S  1.7  1.7 909:51.03 java                                                               
+```
+
+Step4：jstat -gc 动态观察gc情况 / 阅读GC日志发现频繁GC / arthas观察 / jconsole/jvisualVM/ Jprofiler（最好用）
+jstat -gc 4655 500 : 每个500个毫秒打印GC的情况
+
+Step5：jmap - histo 4655 | head -20，查找有多少对象产生
+
+Step6：使用MAT / jhat /jvisualvm 进行dump文件分析
+https://www.cnblogs.com/baihuitestsoftware/articles/6406271.html 
+
 # 参考文献
 
 https://mp.weixin.qq.com/s/_AKQs-xXDHlk84HbwKUzOw
