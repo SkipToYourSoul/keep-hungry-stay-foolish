@@ -191,3 +191,23 @@ class Solution:
         return mid
 ```
 
+#### [面试题54. 二叉搜索树的第k大节点](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-di-kda-jie-dian-lcof/)
+
+```python
+class Solution:
+    def kthLargest(self, root: TreeNode, k: int) -> int:
+        if root is None:
+            return None
+        arr = []
+        def dfs(root):
+            if root is None:
+                return
+            dfs(root.left)
+            # lcr
+            arr.append(root.val)
+            dfs(root.right)
+        dfs(root)
+        N = len(arr)
+        return arr[N - k]
+```
+
