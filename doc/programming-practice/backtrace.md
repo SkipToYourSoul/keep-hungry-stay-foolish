@@ -36,7 +36,6 @@ class Solution:
                 Q = '.' * col + 'Q' + '.' * (n - col - 1)
                 if is_not_under_attack(row, col):
                     put_queen(row, col)
-                    print(Q)
                     one_result.append(Q)
                     if row == n - 1:
                         result.append(copy.deepcopy(one_result))
