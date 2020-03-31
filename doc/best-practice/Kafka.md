@@ -82,6 +82,28 @@ Kafka运行时很少有大量读磁盘的操作，主要是定期批量写磁盘
 > 保证不重复消费：落表（主键或者唯一索引的方式，避免重复数据）
 > 业务逻辑处理（选择唯一主键存储到Redis或者mongdb中，先查询是否存在，若存在则不处理；若不存在，先插入Redis或Mongdb,再进行业务逻辑处理）
 
+#### 常见的丢消息场景
+
+Kafka消息丢失的情况：
+
+（1）auto.commit.enable=true，消费端自动提交offersets设置为true，当消费者拉到消息之后，还没有处理完 commit interval 提交间隔就到了，提交了offersets。这时consummer又挂了，重启后，从下一个offersets开始消费，之前的消息丢失了。
+
+（2）网络负载高、磁盘很忙，写入失败，又没有设置消息重试，导致数据丢失。
+
+（3）磁盘坏了已落盘数据丢失。
+
+（4）单 批 数 据 的 长 度 超 过 限 制 会 丢 失 数 据 ， 报kafka.common.Mess3.ageSizeTooLargeException异常
+
+Kafka避免消息丢失的解决方案：
+
+（1）设置auto.commit.enable=false，每次处理完手动提交。确保消息真的被消费并处理完成。
+
+（2）kafka 一定要配置上消息重试的机制，并且重试的时间间隔一定要长一些，默认 1 秒钟不符合生产环境（网络中断时间有可能超过 1秒）。
+
+（3）配置多个副本，保证数据的完整性。
+
+（4）合理设置flush间隔。kafka 的数据一开始就是存储在 PageCache 上的，定期 flush 到磁盘上的，也就是说，不是每个消息都被存储在磁盘了，如果出现断电或者机器故障等，PageCache 上的数据就丢。可以通过 log.flush.interval.messages 和 log.flush.interval.ms 来 4.配置 flush 间隔，interval大丢的数据多些，小会影响性能但在 0.本，可以通过 replica机制保证数据不丢，代价就是需要更多资源，尤其是磁盘资源，kafka 当前支持 GZip 和 Snappy压缩，来缓解这个问题 是否使用 replica 取决于在可靠性和资源代价之间的 balance。
+
 #### **消费线程数小于或者等于partition**
 
 一个Consumer Group下消费一个topic的的所有消费线程数应该小于等于这个topic的partition数量。

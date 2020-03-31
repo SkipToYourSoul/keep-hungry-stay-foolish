@@ -55,3 +55,7 @@ RocketMQ 是阿里巴巴开源的一款分布式消息中间件。具有高性�
 2. 根据Topic配置的ConsumeQueue的个数来控制消费并行度。RocketMQ的消费并行是通过分配ConsumeQueue到Consumer实现的，因此Consumer的个数不可以超过集群内该Topic的ConsumeQueue的总数。如果有很多Consumer，请提前告知运维人员为该Topic分配足够多的ConsumeQueue。
 3. 消费失败时，请返回`ConsumeConcurrentlyStatus.RECONSUME_LATER`。这么一来，这一批消息会被送回Broker的延时队列，一定时间后被重新消费。
 4. QAE环境时消费者需要设置一个唯一值的instanceName，例如： `consumer.setInstanceName(System.currentTimeMillis()+"-"+new Random().nextInt(1000));`
+
+#### 消息丢失的case和对应的解决方案
+
+https://blog.csdn.net/LO_YUN/article/details/103949317
