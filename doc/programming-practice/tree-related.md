@@ -211,3 +211,17 @@ class Solution:
         return arr[N - k]
 ```
 
+#### [二叉搜索树的最近公共祖先](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-zui-jin-gong-gong-zu-xian-lcof/)
+
+```python
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        if (root.val - p.val) * (root.val - q.val) <= 0:
+            return root
+        if root.val > p.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        if root.val < p.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+        return None
+```
+
