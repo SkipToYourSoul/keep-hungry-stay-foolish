@@ -231,10 +231,12 @@ ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
 	.setNameFormat("demo-pool-%d").build();
 
 //Common Thread Pool
-/* corePoolSize: 线程池的基本大小, 当提交一个任务到线程池的时候，线程池会创建一个线程来执行任务，即使当前线程池已经存在空闲线程，仍然会创建一个线程，等到需要执行的任务数大于线程池基本大小时就不再创建。
-	* maximumPoolSizeSize: 线程池最大数量，线程池允许创建的最大线程数，如果队列满了，并且已创建的线程数小于最大线程数，则线程池会再创建新的线程执行任务。
-	* keepAliveTime: 线程活动保持时间，线程池的工作线程空闲后，保持存活的时间
-	* Handler: 拒绝策略，如果线程池满了，而且有界队列也满了，对新添加进来的任务的处理方式
+/* corePoolSize：池中的线程数，即使其处于IDLE状态
+maximumPoolSize：池中允许的最大线程数
+keepAliveTime：当线程数大于核心时，空闲线程在终止之前等待新任务的最长时间
+unit：keepAliveTime的时间单位
+workQueue：队列，用于在执行task之前保存task
+handler：当达到了线程边界和队列容量，无法及时处理时，reject task使用的处理程序
 */
 ExecutorService pool = new ThreadPoolExecutor(5, 200,
 	0L, TimeUnit.MILLISECONDS,
@@ -244,6 +246,16 @@ ExecutorService pool = new ThreadPoolExecutor(5, 200,
 pool.execute(()-> System.out.println(Thread.currentThread().getName()));
 pool.shutdown();//gracefully shutdown
 ```
+
+可以简单这样理解线程池：
+
+1.如果正在运行少于corePoolSize的线程，尝试使用给定命令启动新线程。调用addWorker时会以原子方式检查runState和workerCount，通过返回false来防止在不应该添加线程时添加线程。（如果未达到maximumPoolSize，那么会扩容？）
+
+2.如果任务可以成功进入队列，那么我们仍然需要仔细检查是否应该添加一个线程（因为自上次检查后现有的线程已经死亡），或者自从进入此方法后池关闭了。 所以我们重新检查状态，如果线程停止了那么将任务回滚进入其他线程，或者如果没有其他线程，则启动新的线程。
+
+3.如果我们不能将任务入队，那么我们尝试添加一个新线程。 如果失败，我们知道我们已关闭或饱和，因此拒绝该任务。
+
+workQueue是一个BlockingQueue，也就是说当前线程数小于corePoolSize，那么就启用新的线程，如果大于corePoolSize（如果有扩容机制，那么就是maximumPoolSize），那么就放到这个workQueue里面（workQueue.offer）
 
 # 参考文献
 
