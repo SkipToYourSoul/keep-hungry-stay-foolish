@@ -53,6 +53,23 @@ dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
 解释：今天我持有着股票，有两种可能：
 要么我昨天就持有着股票，然后今天选择 rest，所以我今天还持有着股票；
 要么我昨天本没有持有，但今天我选择 buy，所以今天我就持有股票了。
+
+dp[-1][k][0] = 0
+解释：因为 i 是从 0 开始的，所以 i = -1 意味着还没有开始，这时候的利润当然是 0 。
+dp[-1][k][1] = -infinity
+解释：还没开始的时候，是不可能持有股票的，用负无穷表示这种不可能。
+dp[i][0][0] = 0
+解释：因为 k 是从 1 开始的，所以 k = 0 意味着根本不允许交易，这时候利润当然是 0 。
+dp[i][0][1] = -infinity
+解释：不允许交易的情况下，是不可能持有股票的，用负无穷表示这种不可能。
+
+base case：
+dp[-1][k][0] = dp[i][0][0] = 0
+dp[-1][k][1] = dp[i][0][1] = -infinity
+
+状态转移方程：
+dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i])
+dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
 ```
 
 #### [股票的最大利润](https://leetcode-cn.com/problems/gu-piao-de-zui-da-li-run-lcof/)
@@ -81,4 +98,46 @@ class Solution:
 ```
 
 更多参考：[https://github.com/labuladong/fucking-algorithm/blob/master/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E7%B3%BB%E5%88%97/%E5%9B%A2%E7%81%AD%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98.md](https://github.com/labuladong/fucking-algorithm/blob/master/动态规划系列/团灭股票问题.md)
+
+# 打家劫舍
+
+#### [打家劫舍 II](https://leetcode-cn.com/problems/house-robber-ii/)
+
+```python
+# dpResult函数则为最基础的动归解
+# dp[i] = max(dp[i+1], dp[i+2] + nums[i])
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        N = len(nums)
+        if N == 1:
+            return nums[0]
+        def dpResult(nums, start, end):
+            dp = [0] * (N + 2)
+            for i in range(end, start - 1, -1):
+                dp[i] = max(dp[i + 1], dp[i + 2] + nums[i])
+            return dp[start]
+        
+        return max(dpResult(nums, 0, N - 2), dpResult(nums, 1, N - 1))
+```
+
+#### [打家劫舍 III](https://leetcode-cn.com/problems/house-robber-iii/)
+
+```python
+class Solution:
+    def rob(self, root: TreeNode) -> int:
+        # 返回一个大小为 2 的数组 arr
+        # arr[0] 表示不抢 root 的话，得到的最大钱数
+        # arr[1] 表示抢 root 的话，得到的最大钱数
+        def dp(root):
+            if root is None:
+                return (0, 0)
+            left = dp(root.left)
+            right = dp(root.right)
+            do_it = root.val + left[0] + right[0]
+            not_do = max(left[0], left[1]) + max(right[0], right[1])
+            return (not_do, do_it)
+        
+        result = dp(root)
+        return max(result[0], result[1])
+```
 
