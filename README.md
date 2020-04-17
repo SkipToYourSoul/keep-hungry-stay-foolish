@@ -15,9 +15,9 @@
 
 以及一些基础的编程知识点汇总，包括：
 
-1. GC
-2. 多线程
-3. 数据结构
+1. [GC](/doc/programming-artical/JVM-GC.md)
+2. [多线程](/doc/programming-artical/Java-MutiThread.md)
+3. [实战问题调优和性能调优经验](/doc/programming-artical/System-Problem.md)
 
 ## best-practice
 
@@ -31,6 +31,16 @@
 
 应用服务相关：[Dubbo](doc/best-practice/Dubbo.md)、[Spring&SpringBoot](doc/best-practice/Spring&SpringBoot.md)
 
+## Programing-practice
+
+leetcode解题记录。
+
+思路汇总：回溯、动归、
+
+数据结构相关：链表、树
+
+常见题型：二分、kmp、lcs、topK、排序、搜索
+
 ## daily-bugs
 
 记录日常开发中遇到的bug以及对应的解决方案。
@@ -38,7 +48,3 @@
 ## knowledge-graph
 
 记录常用的思维逻辑图和脑图。
-
-## leetcode
-
-leetcode解题记录。
