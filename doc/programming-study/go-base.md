@@ -2,6 +2,8 @@
 
 记录一下从零开始学习go语言的过程。
 
+https://www.runoob.com/go/go-tutorial.html
+
 ## 环境搭建
 
 由于一直用idea进行开发，因此还是优先学习如何在idea中集成go的开发环境。
@@ -178,5 +180,66 @@ a = [3][4]int{
  {4, 5, 6, 7} ,   /*  第二行索引为 1 */
  {8, 9, 10, 11},   /* 第三行索引为 2 */
 }
+```
+
+### 指针
+
+```go
+var var_name *var-type
+
+// &a, ip均为a变量的地址
+// a, *ip均为a变量的值
+var a int = 20
+var ip *int
+ip = &a
+
+// 指向指针的指针
+var a int
+var ptr *int
+var pptr **int
+```
+
+### 结构体
+
+```go
+type struct_variable_type struct {
+   member definition
+   member definition
+   ...
+   member definition
+}
+variable_name := structure_variable_type {value1, value2...valuen}
+
+// 初始化
+cat := new(module.Cat)
+cat2 := module.Cat{"Meili2", 2}
+cat3 := module.Cat{Name:"Meili3"}
+
+// 访问结构体成员
+fmt.Println(cat.Name, cat.Age)
+```
+
+### 切片（Slice）
+
+```go
+// 切片是动态可变的数组, 初始化时不指定长度
+var identifier []type
+
+// 使用make()函数来创建切片
+slice1 := make([]type, len, cap)
+
+// 初始化
+s :=[] int {1,2,3}	// 直接初始化
+s := arr[startIndex:endIndex] // 使用数组创建新的切片
+s := make([]int, 3, 5)	// 使用make函数初始化
+
+// 使用
+numbers := []{1,2,3,4,5}
+numbers[1:3]	// like python
+numbers = append(numbers, 6, 7, 8)	// 追加元素
+/* 创建切片 numbers1 是之前切片的两倍容量*/
+numbers1 := make([]int, len(numbers), (cap(numbers))*2)
+/* 拷贝 numbers 的内容到 numbers1 */
+copy(numbers1,numbers)
 ```
 
