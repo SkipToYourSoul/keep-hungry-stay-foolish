@@ -21,7 +21,7 @@ go version go1.14.2 darwin/amd64
 liyedeMacBook-Pro:~ liye$ go env
 xxxx
 # GOROOT 指向系统安装路径
-GOROOT="/usr/local/go"
+GOROOT="/usr/local/go" 
 		--src                 <<--- Go 语言自带的源代码
     --pkg                 <<--- 编译的中间文件放在此文件夹
     --bin                 <<--- 编译的目标文件放在此文件夹
@@ -241,5 +241,203 @@ numbers = append(numbers, 6, 7, 8)	// 追加元素
 numbers1 := make([]int, len(numbers), (cap(numbers))*2)
 /* 拷贝 numbers 的内容到 numbers1 */
 copy(numbers1,numbers)
+```
+
+### 范围（Range）
+
+```go
+// 遍历切片
+nums := []int{2,3,4}
+for i, num := range nums {
+  fmt.Println(i, num)
+}
+
+// 遍历map
+kvs := map[string]string{"a": "apple", "b": "banana"}
+for k, v :=range kvs {
+  fmt.Printf(k, v)
+}
+```
+
+### 集合（Map）
+
+```go
+/* 声明变量，默认 map 是 nil */
+var map_variable map[key_data_type]value_data_type
+
+/* 使用 make 函数 */
+map_variable := make(map[key_data_type]value_data_type)
+
+m = make(map[string]string)
+m["a"] = "a"
+
+// 判断是否存在
+a, isExist := m["a"]
+if isExist {
+  // doSomething
+}
+
+// 删除元素
+delete(m, "a")
+```
+
+## 语言特性
+
+### 语言类型转换
+
+```go
+var sum int = 17
+var count int = 5
+var mean float32
+mean = float32(sum)/float32(count)
+```
+
+### 接口
+
+```go
+/* 定义接口 */
+type interface_name interface {
+   method_name1 [return_type]
+   ...
+   method_namen [return_type]
+}
+
+/* 定义结构体 */
+type struct_name struct {
+   /* variables */
+}
+
+/* 实现接口方法 */
+func (struct_name_variable struct_name) method_name1() [return_type] {
+   /* 方法实现 */
+}
+
+type Phone interface {
+    call()
+}
+
+type NokiaPhone struct {
+}
+
+func (nokiaPhone NokiaPhone) call() {
+    fmt.Println("I am Nokia, I can call you!")
+}
+```
+
+### 错误处理
+
+```go
+// go内置的错误接口
+type error interface {
+    Error() string
+}
+
+func Sqrt(f float64) (float64, error) {
+    if f < 0 {
+        return 0, errors.New("math: square root of negative number")
+    }
+    // 实现
+}
+
+// 调用
+result, err:= Sqrt(-1)
+if err != nil {
+   fmt.Println(err)
+}
+```
+
+### 并发
+
+Go 语言支持并发，我们只需要通过 go 关键字来开启 goroutine 即可。
+
+goroutine 是轻量级线程，goroutine 的调度是由 Golang 运行时进行管理的。
+
+```go
+go 函数名( 参数列表 )
+// eg
+go f(x, y, z)
+
+func say(s string) {
+  for i := 0; i < 5; i++ {
+    time.Sleep(100 * time.Millisecond)
+    fmt.Println(s)
+  }
+}
+
+func main() {
+  go say("world")
+  say("hello")
+}
+```
+
+通道（channel）是用来传递数据的一个数据结构。
+
+通道可用于两个 goroutine 之间通过传递一个指定类型的值来同步运行和通讯。操作符 `<-` 用于指定通道的方向，发送或接收。如果未指定方向，则为双向通道。
+
+```go
+ch <- v    // 把 v 发送到通道 ch
+v := <-ch  // 从 ch 接收数据, 并把值赋给 v
+
+// 声明通道
+ch := make(chan int)
+
+// 默认不带缓冲区的通道使用
+func sum(s []int, c chan int) {
+  sum := 0
+  for _, v := range s {
+    sum += v
+  }
+  c <- sum // 把 sum 发送到通道 c
+}
+
+func main() {
+  s := []int{7, 2, 8, -9, 4, 0}
+
+  c := make(chan int)
+  go sum(s[:len(s)/2], c)
+  go sum(s[len(s)/2:], c)
+  x, y := <-c, <-c // 从通道 c 中接收
+
+  fmt.Println(x, y, x+y)	// -5 17 12
+}
+
+// 通道可以设置缓冲区，通过 make 的第二个参数指定缓冲区大小
+ch := make(chan int, 100)
+func main() {
+  // 这里我们定义了一个可以存储整数类型的带缓冲通道
+  // 缓冲区大小为2
+  ch := make(chan int, 2)
+
+  // 因为 ch 是带缓冲的通道，我们可以同时发送两个数据
+  // 而不用立刻需要去同步读取数据
+  ch <- 1
+  ch <- 2
+
+  // 获取这两个数据, 输出1,2
+  fmt.Println(<-ch)
+  fmt.Println(<-ch)
+}
+
+// 遍历和关闭通道
+func fibonacci(n int, c chan int) {
+  x, y := 0, 1
+  for i := 0; i < n; i++ {
+    c <- x
+    x, y = y, x+y
+  }
+  close(c)
+}
+
+func main() {
+  c := make(chan int, 10)
+  go fibonacci(cap(c), c)
+  // range 函数遍历每个从通道接收到的数据，因为 c 在发送完 10 个
+  // 数据之后就关闭了通道，所以这里我们 range 函数在接收到 10 个数据
+  // 之后就结束了。如果上面的 c 通道不关闭，那么 range 函数就不
+  // 会结束，从而在接收第 11 个数据的时候就阻塞了。
+  for i := range c {
+    fmt.Println(i)
+  }
+}
 ```
 
