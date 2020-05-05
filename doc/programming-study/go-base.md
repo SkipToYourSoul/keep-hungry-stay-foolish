@@ -308,6 +308,7 @@ type struct_name struct {
 }
 
 /* 实现接口方法 */
+/* 方法在声明时带有接收者 */
 func (struct_name_variable struct_name) method_name1() [return_type] {
    /* 方法实现 */
 }
