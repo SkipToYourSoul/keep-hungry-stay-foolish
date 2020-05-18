@@ -31,6 +31,16 @@
 
 应用服务相关：[Dubbo](doc/best-practice/Dubbo.md)、[Spring&SpringBoot](doc/best-practice/Spring&SpringBoot.md)
 
+## Programming-study
+
+go语言学习笔记。
+
+[基础概念和语法学习](doc/programming-study/go-base.md)
+
+[《go语言实战》笔记1-10：基础](doc/programming-study/go-practice-1.md)
+
+[《go语言实战》笔记11-17：并发实战](doc/programming-study/go-practice-2.md)
+
 ## Programing-practice
 
 leetcode解题记录。
