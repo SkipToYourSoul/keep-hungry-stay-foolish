@@ -41,6 +41,8 @@ go语言学习笔记。
 
 [《go语言实战》笔记11-17：并发实战](doc/programming-study/go-practice-2.md)
 
+[《go语言实战》笔记18-27：扩展](doc/programming-study/go-practice-3.md)
+
 ## Programing-practice
 
 leetcode解题记录。
